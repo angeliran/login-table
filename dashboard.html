@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <title>Dashboard</title>
+    <style>
+        [v-cloak]{display:none;}
+        .principal{
+            margin-top: 2rem;
+        }
+    </style>
+</head>
+<body class="m-0 h-100 row justify-content-center align-items-center " style="background-color: rgba(149, 88, 222, 1);">
+    
+    <div id="app" class="col-sm-6  p-3 principal" v-cloak>
+        <div class="bg-white rounded p-3 mb-4 d-flex flex-row justify-content-between align-items-center">
+            <h1>User list</h1>
+            <button class="btn btn-danger" @click="logout">Logout</button>
+        </div>
+        <div class="bg-white rounded p-4 table-responsive">
+            <button class="btn btn-success mb-2">Add new user</button>
+            <table class="table ">
+                <thead class="bg-warning">
+                    <tr>
+                        <th>Name</th>
+                        <th>Username</th>
+                        <th>Email</th>
+                        <th>Address</th>
+                        <th>Phone</th>
+                        <th>Website</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="user in users" :key="user.id">
+                        <td>{{user.name}}</td>
+                        <td>{{user.username}}</td>
+                        <td>{{user.email}}</td>
+                        <td>{{user.address.city}} - {{user.address.street}}</td>
+                        <td>{{user.phone}}</td>
+                        <td>{{user.website}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+
+    <script src="https://unpkg.com/vue@3"></script>
+
+    <script>
+        const { createApp } = Vue
+
+        createApp({
+            data() {
+                return {
+                    users: [],
+                    user: JSON.parse(sessionStorage.getItem("user")),
+                }
+            },
+            watch:{
+                user(newUser, oldUser){
+                    if(newUser !== oldUser){
+                        alert("Sesión terminada", location.href = "index.html");
+                    }
+                }
+            },
+            methods:{
+                logout(){
+                    sessionStorage.removeItem("user");
+                    this.user = {};
+                }
+            },
+            mounted(){
+                fetch('users.json')
+                    .then(res => res.json())
+                    .then(json => (this.users = json))
+                    .catch((err) => (console.log(err)));
+
+                if(!this.user){
+                    location.href= "index.html";
+                }
+            },
+        }).mount('#app')
+    </script>
+</body>
+</html>
