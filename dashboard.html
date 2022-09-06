@@ -156,7 +156,8 @@
                     user: JSON.parse(sessionStorage.getItem("user")),
                     showTable: true, 
                     method_push: true,
-                    indexUser: '',        
+                    indexUser: '',
+                    lastId: 10,        
                     formUser: {
                         id: '',
                         name: '',
@@ -222,16 +223,15 @@
                 addUser(){
                     this.method_push = true;
                     this.showFormUser();
-                    this.formUser.id = this.users.length+1;
+                    this.formUser.id = ++this.lastId;
                 },
                 saveUser(){
                     if(this.method_push){
                         this.users.push(this.formUser);
-                        this.cancelFormUser();
                     }else{
                         this.users[this.indexUser] = this.formUser;
-                      this.cancelFormUser();
                     }
+                    this.cancelFormUser();
                 },
                 editUser(index){
                     this.method_push = false;
@@ -293,6 +293,8 @@
                 if(!this.user){
                     location.href= "index.html";
                 }
+
+                
             },
         }).mount('#app')
     </script>
