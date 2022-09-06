@@ -12,38 +12,134 @@
             margin-top: 2rem;
         }
     </style>
+
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body class="m-0 h-100 row justify-content-center align-items-center " style="background-color: rgba(149, 88, 222, 1);">
     
-    <div id="app" class="col-sm-6  p-3 principal" v-cloak>
+    <div id="app" class="col-sm-10  p-3 principal" v-cloak>
         <div class="bg-white rounded p-3 mb-4 d-flex flex-row justify-content-between align-items-center">
             <h1>User list</h1>
             <button class="btn btn-danger" @click="logout">Logout</button>
         </div>
-        <div class="bg-white rounded p-4 table-responsive">
-            <button class="btn btn-success mb-2">Add new user</button>
+        <div class="bg-white rounded p-4 table-responsive" v-if="showTable">
+            <button class="btn btn-success mb-2" @click="addUser">Add new user</button>
             <table class="table ">
                 <thead class="bg-warning">
                     <tr>
+                        <th>ID</th>
                         <th>Name</th>
                         <th>Username</th>
                         <th>Email</th>
                         <th>Address</th>
                         <th>Phone</th>
                         <th>Website</th>
+                        <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr v-for="user in users" :key="user.id">
+                    <tr v-for="(user, index) in users" :key="user.id">
+                        <td>{{user.id}}</td>
                         <td>{{user.name}}</td>
                         <td>{{user.username}}</td>
                         <td>{{user.email}}</td>
                         <td>{{user.address.city}} - {{user.address.street}}</td>
                         <td>{{user.phone}}</td>
                         <td>{{user.website}}</td>
+                        <td>
+                            <button class="btn btn-success me-2" @click="editUser(index)">Edit</button>
+                            <button class="btn btn-danger" @click="destroyUser(user.id)">Delete</button>
+                        </td>
                     </tr>
                 </tbody>
             </table>
+        </div>
+        <div class="bg-white rounded p-4" v-if="!showTable">
+            <div class="row">
+                <h4>Data user</h4>
+                <div class="col-sm-4">
+                    <label class="form-label" for="name">Name</label>
+                    <div class="input-group mb-3">
+                      <input type="text" class="form-control" name="name" placeholder="Name" v-model="formUser.name">
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <label class="form-label" for="username">Username</label>
+                    <div class="input-group mb-3">
+                      <input type="text" class="form-control" name="username" placeholder="Username" v-model="formUser.username">
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <label class="form-label" for="email">Email</label>
+                    <div class="input-group mb-3">
+                      <input type="text" class="form-control" name="email" placeholder="Email" v-model="formUser.email">
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <label class="form-label" for="password">Password</label>
+                    <div class="input-group mb-3">
+                      <input type="password" class="form-control" name="password" placeholder="Password" v-model="formUser.password">
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <label class="form-label" for="phone">Phone</label>
+                    <div class="input-group mb-3">
+                      <input type="text" class="form-control" name="phone" placeholder="Phone" v-model="formUser.phone">
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <label class="form-label" for="website">Website</label>
+                    <div class="input-group mb-3">
+                      <input type="text" class="form-control" name="website" placeholder="Website" v-model="formUser.website">
+                    </div>
+                </div>
+                <hr class="my-4"> 
+                <h4>Data address</h4>
+                <div class="col-sm-4">
+                    <label class="form-label" for="street">Street</label>
+                    <div class="input-group mb-3">
+                      <input type="text" class="form-control" name="street" placeholder="Street" v-model="formUser.address.street">
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <label class="form-label" for="suite">Suite</label>
+                    <div class="input-group mb-3">
+                      <input type="text" class="form-control" name="suite" placeholder="Suite" v-model="formUser.address.suite">
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <label class="form-label" for="city">City</label>
+                    <div class="input-group mb-3">
+                      <input type="text" class="form-control" name="city" placeholder="City" v-model="formUser.address.city">
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <label class="form-label" for="zipcode">Zipcode</label>
+                    <div class="input-group mb-3">
+                      <input type="text" class="form-control" name="zipcode" placeholder="Zipcode" v-model="formUser.address.zipcode">
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <label class="form-label" for="lat">Latitude</label>
+                    <div class="input-group mb-3">
+                      <input type="text" class="form-control" name="lat" placeholder="Latitude" v-model="formUser.address.geo.lat">
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <label class="form-label" for="lng">Longitude</label>
+                    <div class="input-group mb-3">
+                      <input type="text" class="form-control" name="lng" placeholder="Longitude" v-model="formUser.address.geo.lng">
+                    </div>
+                </div>
+                <hr class="my-4">
+                
+            </div>
+            <div class="row d-flex justify-content-end">
+                <div class="col-sm-2">
+                    <button class="btn btn-danger me-2" @click="showFormUser">Cancel</button>
+                    <button class="btn btn-success" @click="saveUser()">Save user</button>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -58,12 +154,32 @@
                 return {
                     users: [],
                     user: JSON.parse(sessionStorage.getItem("user")),
-                }
-            },
-            watch:{
-                user(newUser, oldUser){
-                    if(newUser !== oldUser){
-                        alert("Sesión terminada", location.href = "index.html");
+                    showTable: true, 
+                    method_push: true,
+                    indexUser: '',        
+                    formUser: {
+                        id: '',
+                        name: '',
+                        username: "",
+                        password: "",
+                        email: "",
+                        address: {
+                            street: "",
+                            suite: "",
+                            city: "",
+                            zipcode: "",
+                            geo: {
+                                lat: "",
+                                lng: ""
+                            }
+                        },
+                        phone: "",
+                        website: "",
+                        company: {
+                            name: "",
+                            catchPhrase: "",
+                            bs: ""
+                        }
                     }
                 }
             },
@@ -71,6 +187,101 @@
                 logout(){
                     sessionStorage.removeItem("user");
                     this.user = {};
+                    location.href= "index.html";
+                },
+                showFormUser(){
+                    this.showTable = this.showTable ? false : true;
+                },
+                cancelFormUser(){
+                    this.showFormUser();
+                    this.formUser= {
+                        id: '',
+                        name: '',
+                        username: "",
+                        password: "",
+                        email: "",
+                        address: {
+                            street: "",
+                            suite: "",
+                            city: "",
+                            zipcode: "",
+                            geo: {
+                                lat: "",
+                                lng: ""
+                            }
+                        },
+                        phone: "",
+                        website: "",
+                        company: {
+                            name: "",
+                            catchPhrase: "",
+                            bs: ""
+                        }
+                    }
+                },
+                addUser(){
+                    this.method_push = true;
+                    this.showFormUser();
+                    this.formUser.id = this.users.length+1;
+                },
+                saveUser(){
+                    if(this.method_push){
+                        this.users.push(this.formUser);
+                        this.cancelFormUser();
+                    }else{
+                        this.users[this.indexUser] = this.formUser;
+                      this.cancelFormUser();
+                    }
+                },
+                editUser(index){
+                    this.method_push = false;
+                    this.showFormUser();
+                    this.indexUser = index;
+                    this.formUser= {
+                        id: this.users[index].id,
+                        name: this.users[index].name,
+                        username: this.users[index].username,
+                        password: this.users[index].password,
+                        email: this.users[index].email,
+                        address: {
+                            street: this.users[index].address.street,
+                            suite: this.users[index].address.suite,
+                            city: this.users[index].address.city,
+                            zipcode: this.users[index].address.zipcode,
+                            geo: {
+                                lat: this.users[index].address.geo.lat,
+                                lng: this.users[index].address.geo.lng
+                            }
+                        },
+                        phone: this.users[index].phone,
+                        website: this.users[index].website,
+                        company: {
+                            name: this.users[index].company.name,
+                            catchPhrase: this.users[index].company.catchPhrase,
+                            bs: this.users[index].company.bs
+                        }
+                    }
+                },
+                destroyUser(id){
+                    Swal.fire({
+                        title: '¿Está seguro de eliminar usuario?',
+                        text: "¡No podrá revertir este cambio!",
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#d33',
+                        cancelButtonColor: '#3085d6',
+                        confirmButtonText: 'Cancelar',
+                        cancelButtonText: 'Sí, eliminar'
+                        }).then((result) => {
+                        if (!result.isConfirmed) {
+                            this.users = this.users.filter(user => user.id !== id);
+                            Swal.fire(
+                            '¡Eliminado!',
+                            'El usuario ha sido eliminado',
+                            'success'
+                            )
+                        }
+                        })
                 }
             },
             mounted(){
