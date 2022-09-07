@@ -136,7 +136,7 @@
             </div>
             <div class="row d-flex justify-content-end">
                 <div class="col-sm-2">
-                    <button class="btn btn-danger me-2" @click="showFormUser">Cancel</button>
+                    <button class="btn btn-danger me-2" @click="cancelFormUser">Cancel</button>
                     <button class="btn btn-success" @click="saveUser()">Save user</button>
                 </div>
             </div>
@@ -264,12 +264,12 @@
                 },
                 destroyUser(id){
                     Swal.fire({
-                        title: '¿Está seguro de eliminar usuario?',
+                        title: '¿Está seguro de eliminar usuario?',  
                         text: "¡No podrá revertir este cambio!",
                         icon: 'warning',
                         showCancelButton: true,
-                        confirmButtonColor: '#d33',
-                        cancelButtonColor: '#3085d6',
+                        confirmButtonColor: 'gray',
+                        cancelButtonColor: '#dc3545',
                         confirmButtonText: 'Cancelar',
                         cancelButtonText: 'Sí, eliminar'
                         }).then((result) => {
