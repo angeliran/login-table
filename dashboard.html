@@ -231,6 +231,11 @@
                     }else{
                         this.users[this.indexUser] = this.formUser;
                     }
+                    Swal.fire(
+                        'Proceso completado',
+                        'Se realizó con exito la operación',
+                        'success'
+                        )
                     this.cancelFormUser();
                 },
                 editUser(index){
