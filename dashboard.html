@@ -242,30 +242,7 @@
                     this.method_push = false;
                     this.showFormUser();
                     this.indexUser = index;
-                    this.formUser= {
-                        id: this.users[index].id,
-                        name: this.users[index].name,
-                        username: this.users[index].username,
-                        password: this.users[index].password,
-                        email: this.users[index].email,
-                        address: {
-                            street: this.users[index].address.street,
-                            suite: this.users[index].address.suite,
-                            city: this.users[index].address.city,
-                            zipcode: this.users[index].address.zipcode,
-                            geo: {
-                                lat: this.users[index].address.geo.lat,
-                                lng: this.users[index].address.geo.lng
-                            }
-                        },
-                        phone: this.users[index].phone,
-                        website: this.users[index].website,
-                        company: {
-                            name: this.users[index].company.name,
-                            catchPhrase: this.users[index].company.catchPhrase,
-                            bs: this.users[index].company.bs
-                        }
-                    }
+                    this.formUser = this.users[index];
                 },
                 destroyUser(id){
                     Swal.fire({
